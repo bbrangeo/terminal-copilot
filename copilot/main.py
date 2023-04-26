@@ -34,6 +34,13 @@ def main():
         help="Include aliases in the prompt. Note: This feature may potentially send sensitive information to OpenAI.",
     )
     parser.add_argument(
+        "-e",
+        "--endpoint",
+        default="http://10.17.36.50:5230/v1",
+        help="Ip endpoint",
+    )
+
+    parser.add_argument(
         "-v", "--verbose", action="store_true", help="increase output verbosity"
     )
     parser.add_argument(
@@ -113,7 +120,7 @@ The command the user is looking for is:
 
     # Call openai api to get the command completion
     openai.api_key = 'dummy'
-    openai.api_base = 'http://10.17.36.50:5230/v1'
+    openai.api_base = args.endpoint
     if openai.api_key is None:
         print("To use copilot please set the OPENAI_API_KEY environment variable")
         print("You can get an API key from https://beta.openai.com/account/api-keys")
@@ -198,15 +205,16 @@ def request_cmds(prompt, n=5):
     response = openai.Completion.create(
         model="fastertransformer",
         prompt=prompt,
-        temperature=0.7,
+        temperatur=0.1,
         max_tokens=256,
-        top_p=1,
+        #top_p=1,
         stop=["\n\n"],
         #frequency_penalty=0,
         #presence_penalty=0,
         n=n,
     )
     choices = response.choices
+    # print(f"choices : {choices}")
     cmds = strip_all_whitespaces_from(choices)
     if len(cmds) > 1:
         cmds = list(dict.fromkeys(cmds))

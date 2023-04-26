@@ -112,7 +112,8 @@ The command the user is looking for is:
         print(prompt)
 
     # Call openai api to get the command completion
-    openai.api_key = os.environ.get("OPENAI_API_KEY")
+    openai.api_key = 'dummy'
+    openai.api_base = 'http://10.17.36.50:5230/v1'
     if openai.api_key is None:
         print("To use copilot please set the OPENAI_API_KEY environment variable")
         print("You can get an API key from https://beta.openai.com/account/api-keys")
@@ -193,16 +194,16 @@ def show_more_cmd_options(prompt):
         show_command_options(prompt, cmds[cmd_menu_entry_index])
 
 
-def request_cmds(prompt, n=1):
+def request_cmds(prompt, n=5):
     response = openai.Completion.create(
-        model="text-davinci-003",
+        model="fastertransformer",
         prompt=prompt,
         temperature=0.7,
         max_tokens=256,
         top_p=1,
-        stop=["`"],
-        frequency_penalty=0,
-        presence_penalty=0,
+        stop=["\n\n"],
+        #frequency_penalty=0,
+        #presence_penalty=0,
         n=n,
     )
     choices = response.choices
